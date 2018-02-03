@@ -18,18 +18,13 @@ public class q1 {
         double angle;
         int x, y;
 
-        for (double i = -90; i < 90; i = i + 0.01) {
-            angle = i;
-            x = (int)(radius * Math.cos(angle * PI / 180));
-            y = (int)(radius * Math.sin(angle * PI / 180));
-            for (int j = xPos - x; j < xPos + x; j++) {
-                for (int k = yPos - y; k < yPos + y; k++) {
-                    img.setRGB(j, k, color.getRGB());
-                }
+        for (int r = 0; r < radius; r++) {
+            for (double i = 0; i < 360; i = i + 0.01) {
+                angle = i;
+                x = (int)(r * Math.cos(angle * PI / 180));
+                y = (int)(r * Math.sin(angle * PI / 180));
+                img.setRGB(xPos + x, yPos + y, color.getRGB());
             }
-
-            // only draws circle perimeter.
-//            img.setRGB(xPos + x, yPos + y, color.getRGB());
         }
     }
     public static void main(String[] args) {
