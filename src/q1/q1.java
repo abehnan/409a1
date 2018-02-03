@@ -16,14 +16,20 @@ public class q1 {
             throw new IllegalArgumentException();
         final double PI = 3.1415926535;
         double angle;
-        int i, j;
+        int x, y;
 
-        for (double k = 0; k < 360; k = k + 0.01) {
-            angle = k;
-            i = (int)(radius * Math.cos(angle * PI / 180));
-            j = (int)(radius * Math.sin(angle * PI / 180));
+        for (double i = -90; i < 90; i = i + 0.01) {
+            angle = i;
+            x = (int)(radius * Math.cos(angle * PI / 180));
+            y = (int)(radius * Math.sin(angle * PI / 180));
+            for (int j = xPos - x; j < xPos + x; j++) {
+                for (int k = yPos - y; k < yPos + y; k++) {
+                    img.setRGB(j, k, color.getRGB());
+                }
+            }
 
-            img.setRGB(xPos + i, yPos + j, color.getRGB());
+            // only draws circle perimeter.
+//            img.setRGB(xPos + x, yPos + y, color.getRGB());
         }
     }
     public static void main(String[] args) {
