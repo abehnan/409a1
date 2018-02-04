@@ -14,7 +14,7 @@ public class q1 {
     private static int width = 1920;
     private static int height = 1080;
     private static boolean pixelReserved[][] = new boolean[width][height];
-    private static AtomicInteger circlesDrawn = new AtomicInteger();
+    private static AtomicInteger circlesDrawn = new AtomicInteger(0);
     private static final Object pixelLock = new Object();
 
     // draws a circle
@@ -38,77 +38,45 @@ public class q1 {
     }
 
     // reserves the pixels needed to draw a circle
-//    private static void reservePixels(int radius, int xPos, int yPos) {
-//        if (xPos >= width || yPos >= height)
-//            throw new IllegalArgumentException();
-//
-//        double angle;
-//        int x, y;
-//
-//        for (int r = 0; r < radius; r++) {
-//            for (double i = 0; i < 360; i = i + 0.01) {
-//                angle = i;
-//                x = (int)(r * Math.cos(angle * PI / 180));
-//                y = (int)(r * Math.sin(angle * PI / 180));
-//                pixelReserved[xPos + x][yPos + y] = true;
-//            }
-//        }
-//    }
+    private static void reservePixels(int radius, int xPos, int yPos) {
+        if (xPos >= width || yPos >= height)
+            throw new IllegalArgumentException();
 
-    // reserves the pixels needed to draw a circle
-    private static boolean synchronizedReservePixels(int radius, int xPos, int yPos) {
-        synchronized (pixelLock) {
-            if (xPos >= width || yPos >= height)
-                throw new IllegalArgumentException();
+        double angle;
+        int x, y;
 
-            double angle;
-            int x, y;
-
-            for (int r = 0; r < radius; r++) {
-                for (double i = 0; i < 360; i = i + 0.01) {
-                    angle = i;
-                    x = (int)(r * Math.cos(angle * PI / 180));
-                    y = (int)(r * Math.sin(angle * PI / 180));
-                    if (pixelReserved[xPos + x][yPos + y])
-                        return false;
-                }
+        for (int r = 0; r < radius; r++) {
+            for (double i = 0; i < 360; i = i + 0.01) {
+                angle = i;
+                x = (int)(r * Math.cos(angle * PI / 180));
+                y = (int)(r * Math.sin(angle * PI / 180));
+                pixelReserved[xPos + x][yPos + y] = true;
             }
-
-            for (int r = 0; r < radius; r++) {
-                for (double i = 0; i < 360; i = i + 0.01) {
-                    angle = i;
-                    x = (int)(r * Math.cos(angle * PI / 180));
-                    y = (int)(r * Math.sin(angle * PI / 180));
-                    pixelReserved[xPos + x][yPos + y] = true;
-                }
-            }
-            return true;
         }
     }
 
+
     // checks if the pixels required are already reserved
-//    private static boolean canDraw(int radius, int xPos, int yPos) {
-//        if (xPos >= width || yPos >= height)
-//            throw new IllegalArgumentException();
-//
-//        double angle;
-//        int x, y;
-//
-//        for (int r = 0; r < radius; r++) {
-//            for (double i = 0; i < 360; i = i + 0.01) {
-//                angle = i;
-//                x = (int)(r * Math.cos(angle * PI / 180));
-//                y = (int)(r * Math.sin(angle * PI / 180));
-//                if (pixelReserved[xPos + x][yPos + y])
-//                    return false;
-//            }
-//        }
-//        return true;
-//    }
+    private static boolean canDraw(int radius, int xPos, int yPos) {
+        if (xPos >= width || yPos >= height)
+            throw new IllegalArgumentException();
+
+        double angle;
+        int x, y;
+
+        for (int r = 0; r < radius; r++) {
+            for (double i = 0; i < 360; i = i + 0.01) {
+                angle = i;
+                x = (int)(r * Math.cos(angle * PI / 180));
+                y = (int)(r * Math.sin(angle * PI / 180));
+                if (pixelReserved[xPos + x][yPos + y])
+                    return false;
+            }
+        }
+        return true;
+    }
 
     public static void main(String[] args) {
-
-        circlesDrawn.set(0);
 
 
         try {
@@ -131,17 +99,14 @@ public class q1 {
 
             long startTime = System.currentTimeMillis();
             if (multithreaded) {
-                Random rng = new Random();
+                ThreadPainter t1 = new ThreadPainter(img, r, c, circlesDrawn, Color.red);
+                ThreadPainter t2 = new ThreadPainter(img, r, c, circlesDrawn, Color.blue);
 
-                while(circlesDrawn.get() < c) {
-                    int radius = Math.max(10, rng.nextInt(r));
-                    int x = Math.max(radius, rng.nextInt(width - radius));
-                    int y = Math.max(radius, rng.nextInt(height - radius));
-                    if (synchronizedReservePixels(radius, x, y)) {
-                        drawCircle(radius, x, y, Color.black);
-                        circlesDrawn.incrementAndGet();
-                    }
-                }
+                t1.start();
+                t2.start();
+
+                t1.join();
+                t2.join();
             }
             else {
                 Random rng = new Random();
@@ -150,12 +115,12 @@ public class q1 {
                     int radius = Math.max(10, rng.nextInt(r));
                     int x = Math.max(radius, rng.nextInt(width - radius));
                     int y = Math.max(radius, rng.nextInt(height - radius));
-                    if (synchronizedReservePixels(radius, x, y)) {
+                    if (canDraw(radius, x, y)) {
+                        reservePixels(radius, x, y);
                         drawCircle(radius, x, y, Color.black);
                         circlesDrawn.incrementAndGet();
                     }
                 }
-
             }
 
             long elapsedTime = System.currentTimeMillis() - startTime;
