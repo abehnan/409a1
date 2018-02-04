@@ -19,7 +19,7 @@ class ThreadPainter extends Thread {
     private static final AtomicInteger counter = new AtomicInteger(0);
     private static final Object pixelLock = new Object();
 
-
+    // for debug purposes
     ThreadPainter(BufferedImage img, int maxRadius, int numCircles, Color color, String name) {
         System.out.println("ThreadPainter " + name + " created.");
         this.img = img;
@@ -29,6 +29,7 @@ class ThreadPainter extends Thread {
         this.name = name;
     }
 
+    // basic constructor
     ThreadPainter(BufferedImage img, int maxRadius, int numCircles, String name) {
         System.out.println("ThreadPainter " + name + " created.");
         this.img = img;
@@ -54,11 +55,11 @@ class ThreadPainter extends Thread {
         if (counter.get() > numCircles)
             return;
 
-        System.out.println(name + " drawing circle at " + xPos + "," + yPos);
         double angle;
         int x, y;
         int rgb = new Color((int)(Math.random() * 0x1000000)).getRGB();
 
+        System.out.println(name + " drawing circle at " + xPos + "," + yPos);
         for (int r = 0; r < radius; r++) {
             for (double i = 0; i < 360; i = i + 0.01) {
                 angle = i;
@@ -76,10 +77,9 @@ class ThreadPainter extends Thread {
         System.out.println(name + " finished drawing circle at " + xPos + "," + yPos);
     }
 
-    // reserves the pixels needed to draw a circle
+    // tests if a thread can draw a circle at the specified location, returns result
+    // if it can, it also locks all the required pixels
     private boolean testAndLockPixels(int radius, int xPos, int yPos) {
-
-
 
         double angle;
         int x, y;
@@ -89,6 +89,7 @@ class ThreadPainter extends Thread {
             if (counter.get() >= numCircles)
                 return false;
 
+            // test if we can draw a circle
             for (int r = 0; r < radius; r++) {
                 for (double i = 0; i < 360; i = i + 0.01) {
                     angle = i;
@@ -106,6 +107,7 @@ class ThreadPainter extends Thread {
                     }
                 }
             }
+            // reserve pixels
             for (int r = 0; r < radius; r++) {
                 for (double i = 0; i < 360; i = i + 0.01) {
                     angle = i;
@@ -128,10 +130,13 @@ class ThreadPainter extends Thread {
         return true;
     }
 
+    // unlocks pixels
+    // called by a thread after it finishes drawing a circle
     private void unlockPixels(int radius, int xPos, int yPos) {
 
         double angle;
         int x, y;
+
         synchronized (pixelLock) {
             for (int r = 0; r < radius; r++) {
                 for (double i = 0; i < 360; i = i + 0.01) {
