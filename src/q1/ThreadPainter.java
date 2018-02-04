@@ -6,24 +6,35 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 class ThreadPainter extends Thread {
+
     private final BufferedImage img;
+    private final int maxRadius;
+    private final int numCircles;
+    private final Color color;
+    private final String name;
     private static final double PI = 3.1415926535;
     private static final int width = 1920;
     private static final int height = 1080;
     private static final boolean pixelReserved[][] = new boolean[width][height];
-    private final int maxRadius;
-    private final int numCircles;
-    private final  AtomicInteger counter;
+    private static final AtomicInteger counter = new AtomicInteger(0);
     private static final Object pixelLock = new Object();
-    private final Color color;
 
-    ThreadPainter(BufferedImage img, int maxRadius, int numCircles, AtomicInteger counter, Color color) {
-        System.out.println("ThreadPainter created color " + color);
+
+    ThreadPainter(BufferedImage img, int maxRadius, int numCircles, Color color, String name) {
+        System.out.println("ThreadPainter " + name + " created.");
         this.img = img;
-        this.counter = counter;
         this.maxRadius = maxRadius;
         this.numCircles = numCircles;
         this.color = color;
+        this.name = name;
+    }
+
+    public static int getWidth() {
+        return width;
+    }
+
+    public static int getHeight() {
+        return height;
     }
 
     // draws a circle
@@ -33,7 +44,7 @@ class ThreadPainter extends Thread {
         if (xPos >= width || yPos >= height)
             throw new IllegalArgumentException();
 
-        System.out.println("drawing circle at " + xPos + "," + yPos);
+        System.out.println(name + " drawing circle at " + xPos + "," + yPos);
         double angle;
         int x, y;
 
@@ -45,14 +56,16 @@ class ThreadPainter extends Thread {
                 img.setRGB(xPos + x, yPos + y, color.getRGB());
             }
         }
-
-        counter.incrementAndGet();
     }
 
     // reserves the pixels needed to draw a circle
     private boolean synchronizedReservePixels(int radius, int xPos, int yPos) {
         synchronized (pixelLock) {
-            System.out.print("attempting to reserve circle at " + xPos + "," + yPos + "...");
+
+            if (counter.get() >= numCircles)
+                return false;
+
+            System.out.print(name + " attempting to reserve circle at " + xPos + "," + yPos + "...");
             if (xPos >= width || yPos >= height)
                 throw new IllegalArgumentException();
 
@@ -71,6 +84,7 @@ class ThreadPainter extends Thread {
                 }
             }
 
+
             for (int r = 0; r < radius; r++) {
                 for (double i = 0; i < 360; i = i + 0.01) {
                     angle = i;
@@ -79,7 +93,8 @@ class ThreadPainter extends Thread {
                     pixelReserved[xPos + x][yPos + y] = true;
                 }
             }
-            System.out.println("sucess!");
+            System.out.println("success!");
+            System.out.println(name + " incrementing counter to " + counter.incrementAndGet());
             return true;
         }
     }
@@ -88,15 +103,23 @@ class ThreadPainter extends Thread {
 
             Random rng = new Random();
 
-            while(counter.get() < numCircles) {
-                int radius = Math.max(10, rng.nextInt(maxRadius));
-                int x = Math.max(radius, rng.nextInt(width - radius));
-                int y = Math.max(radius, rng.nextInt(height - radius));
-                if (synchronizedReservePixels(radius, x, y)) {
-                    drawCircle(radius, x, y);
-                    counter.incrementAndGet();
+            try {
+                while(counter.get() < numCircles) {
+                    int radius = Math.max(20, rng.nextInt(maxRadius));
+                    int x = Math.max(radius, rng.nextInt(width - radius));
+                    int y = Math.max(radius, rng.nextInt(height - radius));
+
+                    if (synchronizedReservePixels(radius, x, y))
+                        drawCircle(radius, x, y);
+                    else
+                        Thread.sleep(50);
+
                 }
             }
+            catch(InterruptedException e) {
+                System.out.println("Thread color " + color + " interrupted.");
+            }
+
 
 
     }
