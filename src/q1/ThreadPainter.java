@@ -91,7 +91,7 @@ class ThreadPainter extends Thread {
 
             // test if we can draw a circle
             for (int r = 0; r < radius; r++) {
-                for (double i = 0; i < 360; i = i + 0.01) {
+                for (double i = 0; i < 360; i = i + 0.1) {
                     angle = i;
                     x = (int) (r * Math.cos(angle * PI / 180));
                     x += xPos;
@@ -109,7 +109,7 @@ class ThreadPainter extends Thread {
             }
             // reserve pixels
             for (int r = 0; r < radius; r++) {
-                for (double i = 0; i < 360; i = i + 0.01) {
+                for (double i = 0; i < 360; i = i + 0.1) {
                     angle = i;
                     x = (int) (r * Math.cos(angle * PI / 180));
                     x += xPos;
@@ -139,7 +139,7 @@ class ThreadPainter extends Thread {
 
         synchronized (pixelLock) {
             for (int r = 0; r < radius; r++) {
-                for (double i = 0; i < 360; i = i + 0.01) {
+                for (double i = 0; i < 360; i = i + 0.1) {
                     angle = i;
                     x = (int)(r * Math.cos(angle * PI / 180));
                     x += xPos;
