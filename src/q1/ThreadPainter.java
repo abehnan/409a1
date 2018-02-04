@@ -91,7 +91,7 @@ class ThreadPainter extends Thread {
 
             // test if we can draw a circle
             for (int r = 0; r < radius; r++) {
-                for (double i = 0; i < 360; i = i + 0.1) {
+                for (double i = 0; i < 360; i++) {
                     angle = i;
                     x = (int) (r * Math.cos(angle * PI / 180));
                     x += xPos;
@@ -109,7 +109,7 @@ class ThreadPainter extends Thread {
             }
             // reserve pixels
             for (int r = 0; r < radius; r++) {
-                for (double i = 0; i < 360; i = i + 0.1) {
+                for (double i = 0; i < 360; i++) {
                     angle = i;
                     x = (int) (r * Math.cos(angle * PI / 180));
                     x += xPos;
@@ -123,11 +123,9 @@ class ThreadPainter extends Thread {
                 }
             }
             counter.incrementAndGet();
+            System.out.println(name + " reserved circle at " + xPos + "," + yPos + " incrementing counter to " + counter.get());
+            return true;
         }
-
-        System.out.println(name + " reserved circle at " + xPos + "," + yPos);
-        System.out.println(name + " incrementing counter to " + counter.get());
-        return true;
     }
 
     // unlocks pixels
@@ -139,7 +137,7 @@ class ThreadPainter extends Thread {
 
         synchronized (pixelLock) {
             for (int r = 0; r < radius; r++) {
-                for (double i = 0; i < 360; i = i + 0.1) {
+                for (double i = 0; i < 360; i++) {
                     angle = i;
                     x = (int)(r * Math.cos(angle * PI / 180));
                     x += xPos;
