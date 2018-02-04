@@ -80,7 +80,7 @@ class ThreadPainter extends Thread {
                     x = (int)(r * Math.cos(angle * PI / 180));
                     y = (int)(r * Math.sin(angle * PI / 180));
                     if (pixelReserved[xPos + x][yPos + y]) {
-                        System.out.print(name + " could not reserve circle at " + xPos + "," + yPos);
+                        System.out.println(name + " could not reserve circle at " + xPos + "," + yPos);
                         return false;
                     }
                 }
@@ -114,7 +114,7 @@ class ThreadPainter extends Thread {
                     if (synchronizedReservePixels(radius, x, y))
                         drawCircle(radius, x, y);
                     else
-                        Thread.sleep(50);
+                        Thread.sleep(10);
 
                 }
             }
