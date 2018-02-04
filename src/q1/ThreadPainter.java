@@ -62,6 +62,7 @@ class ThreadPainter extends Thread {
     private boolean synchronizedReservePixels(int radius, int xPos, int yPos) {
         synchronized (pixelLock) {
 
+            // corner case: sometimes the counter is incremented while the other thread has already entered the loop
             if (counter.get() >= numCircles)
                 return false;
 
