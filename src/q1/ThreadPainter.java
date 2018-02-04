@@ -56,6 +56,7 @@ class ThreadPainter extends Thread {
                 img.setRGB(xPos + x, yPos + y, color.getRGB());
             }
         }
+        System.out.println(name + " finished drawing circle at " + xPos + "," + yPos);
     }
 
     // reserves the pixels needed to draw a circle
@@ -66,7 +67,7 @@ class ThreadPainter extends Thread {
             if (counter.get() >= numCircles)
                 return false;
 
-            System.out.print(name + " attempting to reserve circle at " + xPos + "," + yPos + "...");
+
             if (xPos >= width || yPos >= height)
                 throw new IllegalArgumentException();
 
@@ -79,7 +80,7 @@ class ThreadPainter extends Thread {
                     x = (int)(r * Math.cos(angle * PI / 180));
                     y = (int)(r * Math.sin(angle * PI / 180));
                     if (pixelReserved[xPos + x][yPos + y]) {
-                        System.out.println("failed.");
+                        System.out.print(name + " could not reserve circle at " + xPos + "," + yPos);
                         return false;
                     }
                 }
@@ -94,7 +95,7 @@ class ThreadPainter extends Thread {
                     pixelReserved[xPos + x][yPos + y] = true;
                 }
             }
-            System.out.println("success!");
+            System.out.println(name + " reserved circle at " + xPos + "," + yPos);
             System.out.println(name + " incrementing counter to " + counter.incrementAndGet());
             return true;
         }

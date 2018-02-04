@@ -43,7 +43,7 @@ public class q1 {
             }
 
             long elapsedTime = System.currentTimeMillis() - startTime;
-            System.out.println("time: " + elapsedTime + " ms");
+            System.out.println("\ntime: " + elapsedTime + " ms");
 
             // Write out the image
             File outputfile = new File("outputimage.png");
