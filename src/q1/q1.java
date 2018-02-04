@@ -21,7 +21,7 @@ public class q1 {
             BufferedImage img = new BufferedImage(ThreadPainter.getWidth(), ThreadPainter.getHeight(), BufferedImage.TYPE_INT_ARGB);
             for (int i = 0; i< ThreadPainter.getWidth(); i++) {
                 for (int j = 0; j< ThreadPainter.getHeight(); j++) {
-                    img.setRGB(i,j,0);
+                    img.setRGB(i,j,Color.white.getRGB());
                 }
             }
 

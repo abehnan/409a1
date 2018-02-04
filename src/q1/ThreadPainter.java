@@ -39,10 +39,8 @@ class ThreadPainter extends Thread {
 
     // draws a circle
     // original C code from: http://www.softwareandfinance.com/Turbo_C/DrawCircle.html
-    // code was modified to draw full circles
+    // code was modified to draw filled in circles
     private void drawCircle(int radius, int xPos, int yPos) {
-        if (xPos >= width || yPos >= height)
-            throw new IllegalArgumentException();
 
         System.out.println(name + " drawing circle at " + xPos + "," + yPos);
         double angle;
@@ -52,8 +50,14 @@ class ThreadPainter extends Thread {
             for (double i = 0; i < 360; i = i + 0.01) {
                 angle = i;
                 x = (int)(r * Math.cos(angle * PI / 180));
+                x += xPos;
+                x %= width;
+                if (x < 0) x+= width;
                 y = (int)(r * Math.sin(angle * PI / 180));
-                img.setRGB(xPos + x, yPos + y, color.getRGB());
+                y += yPos;
+                y %= height;
+                if (y < 0) y+= height;
+                img.setRGB(x, y, color.getRGB());
             }
         }
         System.out.println(name + " finished drawing circle at " + xPos + "," + yPos);
@@ -78,8 +82,14 @@ class ThreadPainter extends Thread {
                 for (double i = 0; i < 360; i = i + 0.01) {
                     angle = i;
                     x = (int)(r * Math.cos(angle * PI / 180));
+                    x += xPos;
+                    x %= width;
+                    if (x < 0) x+= width;
                     y = (int)(r * Math.sin(angle * PI / 180));
-                    if (pixelReserved[xPos + x][yPos + y]) {
+                    y += yPos;
+                    y %= height;
+                    if (y < 0) y+= height;
+                    if (pixelReserved[x][y]) {
                         System.out.println(name + " could not reserve circle at " + xPos + "," + yPos);
                         return false;
                     }
@@ -91,8 +101,14 @@ class ThreadPainter extends Thread {
                 for (double i = 0; i < 360; i = i + 0.01) {
                     angle = i;
                     x = (int)(r * Math.cos(angle * PI / 180));
+                    x += xPos;
+                    x %= width;
+                    if (x < 0) x+= width;
                     y = (int)(r * Math.sin(angle * PI / 180));
-                    pixelReserved[xPos + x][yPos + y] = true;
+                    y += yPos;
+                    y %= height;
+                    if (y < 0) y+= height;
+                    pixelReserved[x][y] = true;
                 }
             }
             System.out.println(name + " reserved circle at " + xPos + "," + yPos);
@@ -108,8 +124,10 @@ class ThreadPainter extends Thread {
             try {
                 while(counter.get() < numCircles) {
                     int radius = Math.max(20, rng.nextInt(maxRadius));
-                    int x = Math.max(radius, rng.nextInt(width - radius));
-                    int y = Math.max(radius, rng.nextInt(height - radius));
+//                    int x = Math.max(radius, rng.nextInt(width - radius));
+//                    int y = Math.max(radius, rng.nextInt(height - radius));
+                    int x = rng.nextInt(width);
+                    int y = rng.nextInt(height);
 
                     if (synchronizedReservePixels(radius, x, y))
                         drawCircle(radius, x, y);
