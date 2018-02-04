@@ -27,8 +27,13 @@ public class q1 {
 
             long startTime = System.currentTimeMillis();
             if (multithreaded) {
-                ThreadPainter t1 = new ThreadPainter(img, r, c, Color.red, "Red");
-                ThreadPainter t2 = new ThreadPainter(img, r, c, Color.blue, "Blue");
+                // debug
+//                ThreadPainter t1 = new ThreadPainter(img, r, c, Color.red, "Red");
+//                ThreadPainter t2 = new ThreadPainter(img, r, c, Color.blue, "Blue");
+
+                ThreadPainter t1 = new ThreadPainter(img, r, c, "Thread 1");
+                ThreadPainter t2 = new ThreadPainter(img, r, c, "Thread 2");
+
 
                 t1.start();
                 t2.start();
@@ -37,7 +42,7 @@ public class q1 {
                 t2.join();
             }
             else {
-                ThreadPainter t1 = new ThreadPainter(img, r, c, Color.black, "Black");
+                ThreadPainter t1 = new ThreadPainter(img, r, c, Color.black, "Thread 1");
                 t1.start();
                 t1.join();
             }
