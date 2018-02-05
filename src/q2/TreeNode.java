@@ -68,7 +68,10 @@ public class TreeNode {
             TreeNode currentNode = currentLevel.poll();
             nodesInCurrentLevel.decrementAndGet();
             if (currentNode != null) {
-                System.out.println(currentNode.getData() + " ");
+                System.out.println("depth: " + currentNode.getDepth().get() +
+                        "\tdata: " + currentNode.getData() +
+                        "\ttype: " + currentNode.getType() +
+                        ((currentNode.getParent() == null) ? "" : ("\tparent: " + currentNode.getParent().getData())));
                 currentLevel.add(currentNode.getLeftChild());
                 currentLevel.add(currentNode.getRightChild());
                 nodesInNextLevel.addAndGet(2);
@@ -81,20 +84,6 @@ public class TreeNode {
         }
     }
 
-
-    private boolean createLeftChild(TreeNode tn) {
-        if (leftChild != null)
-            return false;
-        leftChild = new TreeNode(tn, NodeType.LEFT_CHILD);
-        return true;
-    }
-
-    private boolean createRightChild(TreeNode tn) {
-        if (rightChild != null)
-            return false;
-        rightChild = new TreeNode(tn, NodeType.RIGHT_CHILD);
-        return true;
-    }
 
     private void setData(AtomicInteger data) {
         this.data = data;
@@ -112,7 +101,7 @@ public class TreeNode {
         return rightChild;
     }
 
-    public TreeNode getParent() {
+    private TreeNode getParent() {
         return parent;
     }
 
