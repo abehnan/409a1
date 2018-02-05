@@ -1,5 +1,6 @@
 package q2;
 
+import java.text.DecimalFormat;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -13,8 +14,8 @@ class TreeReader extends Thread {
     }
 
     private void traverse(TreeNode n) {
-        if (n == null) return;
-        result.append(n.getData());
+        if (n == null || n.getFloat() == 0) return;
+        result.append(new DecimalFormat("#.0").format(n.getFloat()));
         result.append(" ");
         traverse(n.getLeftChild());
         traverse(n.getRightChild());
@@ -23,9 +24,9 @@ class TreeReader extends Thread {
         AtomicLong start = new AtomicLong(System.currentTimeMillis());
         AtomicLong end = new AtomicLong(start.get() + 5000);
         while(System.currentTimeMillis() < end.get()) {
+            traverse(root);
+            result.append("\n");
             try {
-                traverse(root);
-                result.append("\n");
                 Thread.sleep(rng.nextInt(15) + 5);
             } catch (InterruptedException e) {
                 e.printStackTrace();

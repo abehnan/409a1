@@ -8,9 +8,9 @@ public class TreeBuilder extends Thread {
     private void generateTree(TreeNode n) {
         if (n == null) return;
         if (n.getDepth().get() >= 3) return;
-        TreeNode.createLeftChild(n);
+        TreeNode.initializeLeftChild(n);
         generateTree(n.getLeftChild());
-        TreeNode.createRightChild(n);
+        TreeNode.initializeRightChild(n);
         generateTree(n.getRightChild());
     }
 
