@@ -1,5 +1,6 @@
 package q2;
 
+// note: queue only being used for debug printing, not actual tree traversal
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
@@ -31,7 +32,7 @@ public class TreeNode {
         this.setDepth(new AtomicInteger(parent.getDepth().get() + 1));
         this.leftChild = null;
         this.rightChild = null;
-        this.setData(new AtomicInteger(Float.floatToIntBits(valueScaling.incrementAndGet() +rng.nextFloat())));
+        this.setData(new AtomicInteger(Float.floatToIntBits(valueScaling.incrementAndGet() + rng.nextFloat())));
     }
 
     public static TreeNode getRoot() {

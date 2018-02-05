@@ -6,11 +6,12 @@ public class q2 {
         tb.start();
         try {
             tb.join();
-            TreeNode.printAll(TreeNode.getRoot());
+//            TreeNode.printAll(TreeNode.getRoot());
             TreeReader tr = new TreeReader();
             tr.start();
             tr.join();
             StringBuffer result = tr.getResult();
+
             System.out.println(result);
         } catch (InterruptedException e) {
             e.printStackTrace();
