@@ -61,6 +61,7 @@ class ThreadPainter extends Thread {
 
         System.out.println(name + " drawing circle at " + xPos + "," + yPos);
         for (int r = 0; r < radius; r++) {
+            // note: using higher precision when drawing compared to reserving pixels
             for (double i = 0; i < 360; i = i + 0.01) {
                 angle = i;
                 x = (int)(r * Math.cos(angle * PI / 180));

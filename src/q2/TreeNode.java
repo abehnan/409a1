@@ -1,6 +1,7 @@
 package q2;
 
-import javax.xml.soap.Node;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -12,65 +13,74 @@ enum NodeType {
 
 public class TreeNode {
     private static TreeNode root = null;
-    private final Random rng = new Random();
+    private static final Random rng = new Random();
     private TreeNode leftChild;
     private TreeNode rightChild;
-    private final TreeNode parent;
-    private final NodeType type;
+    private TreeNode parent;
+    private NodeType type;
     private AtomicInteger data;
     private AtomicInteger depth;
 
-    public TreeNode getLeftChild() {
-        return leftChild;
-    }
-
-    public TreeNode getRightChild() {
-        return rightChild;
-    }
-
-    public TreeNode getParent() {
-        return parent;
-    }
-
-    public NodeType getType() {
-        return type;
-    }
-
-    public AtomicInteger getData() {
-        return data;
-    }
-
-    private AtomicInteger getDepth() {
-        return depth;
-    }
-
     private TreeNode() {
-        this.leftChild = null;
-        this.rightChild = null;
-        this.parent = null;
-        this.depth.set(0);
-        this.type = NodeType.ROOT;
-        this.data.set(Float.floatToIntBits(rng.nextFloat()));
     }
 
     private TreeNode(TreeNode parent, NodeType type) {
         this.parent = parent;
         this.type = type;
-        this.depth.set(parent.depth.addAndGet(1));
+        this.setDepth(new AtomicInteger(parent.getDepth().get() + 1));
         this.leftChild = null;
         this.rightChild = null;
-        this.data.set(Float.floatToIntBits(Float.intBitsToFloat(parent.getDepth().get())+rng.nextFloat()));
+        this.setData(new AtomicInteger(Float.floatToIntBits(depth.get() +rng.nextFloat())));
     }
 
-    private boolean createChildren(TreeNode tn) {
-        if (leftChild != null && rightChild != null)
-            return false;
-        if (leftChild == null)
-            leftChild = new TreeNode(tn, NodeType.LEFT_CHILD);
-        if (rightChild == null)
-            rightChild = new TreeNode(tn, NodeType.RIGHT_CHILD);
-        return true;
+    public static TreeNode getRoot() {
+        if (root == null) {
+            root = new TreeNode();
+            root.leftChild = null;
+            root.rightChild = null;
+            root.parent = null;
+            root.setDepth(new AtomicInteger(0));
+            root.type = NodeType.ROOT;
+            root.setData(new AtomicInteger(Float.floatToIntBits(rng.nextFloat())));
+        }
+
+        return root;
     }
+
+    public static void createChildren(TreeNode n) {
+        if (n.leftChild != null && n.rightChild != null)
+            return;
+        if (n.leftChild == null)
+            n.leftChild = new TreeNode(n, NodeType.LEFT_CHILD);
+        if (n.rightChild == null)
+            n.rightChild = new TreeNode(n, NodeType.RIGHT_CHILD);
+    }
+
+
+    public static void printAll(TreeNode n) {
+        if (n.getType() != NodeType.ROOT) return;
+        Queue<TreeNode> currentLevel = new LinkedList<>();
+        AtomicInteger nodesInCurrentLevel = new AtomicInteger(1);
+        AtomicInteger nodesInNextLevel = new AtomicInteger(0);
+
+        currentLevel.add(n);
+        while (!currentLevel.isEmpty()) {
+            TreeNode currentNode = currentLevel.poll();
+            nodesInCurrentLevel.decrementAndGet();
+            if (currentNode != null) {
+                System.out.println(currentNode.getData() + " ");
+                currentLevel.add(currentNode.getLeftChild());
+                currentLevel.add(currentNode.getRightChild());
+                nodesInNextLevel.addAndGet(2);
+            }
+            if (nodesInCurrentLevel.get() == 0) {
+                System.out.println();
+                nodesInCurrentLevel.set(nodesInNextLevel.get());
+                nodesInNextLevel.set(0);
+            }
+        }
+    }
+
 
     private boolean createLeftChild(TreeNode tn) {
         if (leftChild != null)
@@ -86,10 +96,36 @@ public class TreeNode {
         return true;
     }
 
-    public static TreeNode getRoot() {
-        if (root == null)
-            root = new TreeNode();
-
-        return root;
+    private void setData(AtomicInteger data) {
+        this.data = data;
     }
+
+    private void setDepth(AtomicInteger depth) {
+        this.depth = depth;
+    }
+
+    public TreeNode getLeftChild() {
+        return leftChild;
+    }
+
+    public TreeNode getRightChild() {
+        return rightChild;
+    }
+
+    public TreeNode getParent() {
+        return parent;
+    }
+
+    private NodeType getType() {
+        return type;
+    }
+
+    private float getData() {
+        return Float.intBitsToFloat(data.get());
+    }
+
+    public AtomicInteger getDepth() {
+        return depth;
+    }
+
 }
