@@ -14,6 +14,7 @@ enum NodeType {
 public class TreeNode {
     private static TreeNode root = null;
     private static final Random rng = new Random();
+    private static final AtomicInteger valueScaling = new AtomicInteger(0);
     private TreeNode leftChild;
     private TreeNode rightChild;
     private TreeNode parent;
@@ -30,7 +31,7 @@ public class TreeNode {
         this.setDepth(new AtomicInteger(parent.getDepth().get() + 1));
         this.leftChild = null;
         this.rightChild = null;
-        this.setData(new AtomicInteger(Float.floatToIntBits(depth.get() +rng.nextFloat())));
+        this.setData(new AtomicInteger(Float.floatToIntBits(valueScaling.incrementAndGet() +rng.nextFloat())));
     }
 
     public static TreeNode getRoot() {
@@ -47,16 +48,27 @@ public class TreeNode {
         return root;
     }
 
-    public static void createChildren(TreeNode n) {
-        if (n.leftChild != null && n.rightChild != null)
-            return;
+//    public static void createChildren(TreeNode n) {
+//        if (n.leftChild != null && n.rightChild != null)
+//            return;
+//        if (n.leftChild == null)
+//            n.leftChild = new TreeNode(n, NodeType.LEFT_CHILD);
+//        if (n.rightChild == null)
+//            n.rightChild = new TreeNode(n, NodeType.RIGHT_CHILD);
+//    }
+
+    public static void createLeftChild(TreeNode n) {
         if (n.leftChild == null)
             n.leftChild = new TreeNode(n, NodeType.LEFT_CHILD);
+    }
+
+    public static void createRightChild(TreeNode n) {
         if (n.rightChild == null)
             n.rightChild = new TreeNode(n, NodeType.RIGHT_CHILD);
     }
 
-
+    // prints the entire tree using BFS
+    // might not be useful to check for in order traversal
     public static void printAll(TreeNode n) {
         if (n.getType() != NodeType.ROOT) return;
         Queue<TreeNode> currentLevel = new LinkedList<>();
@@ -109,7 +121,7 @@ public class TreeNode {
         return type;
     }
 
-    private float getData() {
+    public float getData() {
         return Float.intBitsToFloat(data.get());
     }
 
