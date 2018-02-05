@@ -1,6 +1,7 @@
 package q2;
 
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 
 class TreeReader extends Thread {
     private final TreeNode root = TreeNode.getRoot();
@@ -19,9 +20,9 @@ class TreeReader extends Thread {
         traverse(n.getRightChild());
     }
     public void run() {
-        long start = System.currentTimeMillis();
-        long end = start + 5000;
-        while(System.currentTimeMillis() < end) {
+        AtomicLong start = new AtomicLong(System.currentTimeMillis());
+        AtomicLong end = new AtomicLong(start.get() + 5000);
+        while(System.currentTimeMillis() < end.get()) {
             try {
                 traverse(root);
                 result.append("\n");
