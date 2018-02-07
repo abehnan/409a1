@@ -11,6 +11,7 @@ public class EvilTreeThread extends Thread {
         if (n == null) return;
 
         //debug
+//        System.out.println("Evil Thread:");
 //        TreeNode.printValues(n);
 
         // chance to delete left subtree

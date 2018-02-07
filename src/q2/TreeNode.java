@@ -1,6 +1,7 @@
 package q2;
 
 // note: queue only being used for debug printing, not actual tree traversal
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -61,6 +62,10 @@ public class TreeNode {
         return root;
     }
 
+    private boolean equals(TreeNode n) {
+        return this.getFloat()==n.getFloat();
+    }
+
     public static void initializeLeftChild(TreeNode n) {
         if (n.leftChild == null)
             n.leftChild = new TreeNode(n, NodeType.LEFT_CHILD);
@@ -78,7 +83,7 @@ public class TreeNode {
         addOrderedNodes(n.getRightChild());
     }
 
-    private static void getOrderedNodes() {
+    private static void updateOrderedNodes() {
         orderedNodes.clear();
         addOrderedNodes(root);
     }
@@ -88,7 +93,7 @@ public class TreeNode {
         parent.setLeftChild(newNode);
 
         // update ordered values in tree
-        getOrderedNodes();
+        updateOrderedNodes();
 
         // find index for new node
         int i;
@@ -174,19 +179,18 @@ public class TreeNode {
 //    }
 
     //  debug
-//    public static void printValues(TreeNode currentNode) {
-//        getOrderedNodes();
-//        orderedNodes.sort(Comparator.comparingInt(o -> (int) o.getFloat()));
-//        int i;
-//        for (i = 0; i < orderedNodes.size(); i++) {
-//            if (currentNode!= null) {
-//                if (orderedNodes.get(i).equals(currentNode))
-//                    System.out.print("**" +new DecimalFormat("#.00").format(orderedNodes.get(i).getFloat()) + "** ");
-//            }
-//
-//            else
-//                System.out.print(new DecimalFormat("#.00").format(orderedNodes.get(i).getFloat()) + " ");
-//        }
-//        System.out.println();
-//    }
+    public static void printValues(TreeNode currentNode) {
+        updateOrderedNodes();
+        int i;
+        for (i = 0; i < orderedNodes.size(); i++) {
+            if (currentNode!= null) {
+                if (orderedNodes.get(i).equals(currentNode))
+                    System.out.print("**" +new DecimalFormat("#.00").format(orderedNodes.get(i).getFloat()) + "** ");
+            }
+
+            else
+                System.out.print(new DecimalFormat("#.00").format(orderedNodes.get(i).getFloat()) + " ");
+        }
+        System.out.println();
+    }
 }
