@@ -1,7 +1,5 @@
 package q2;
 
-//import java.util.Stack;
-
 public class TreeBuilder extends Thread {
     private final TreeNode root = TreeNode.getRoot();
 
@@ -15,16 +13,6 @@ public class TreeBuilder extends Thread {
     }
 
     public void run() {
-//        Stack<TreeNode> stack = new Stack<>();
-//        stack.push(root);
-//        while(!stack.empty()) {
-//            TreeNode currentNode = stack.pop();
-//            if (currentNode.getDepth().get() >= 4)
-//                continue;
-//            TreeNode.createLeftChild(currentNode);
-//            stack.push(currentNode.getLeftChild());
-//            stack.push(currentNode.getRightChild());
-//        }
         generateTree(root);
     }
 }

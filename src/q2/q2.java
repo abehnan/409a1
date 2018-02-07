@@ -7,18 +7,19 @@ public class q2 {
         try {
             tb.join();
 //            TreeNode.printAll(TreeNode.getRoot());
-//            TreeReader treeReader1 = new TreeReader();
-//            TreeReader treeReader2 = new TreeReader();
+            TreeReader treeReader1 = new TreeReader();
+            TreeReader treeReader2 = new TreeReader();
             EvilTreeThread evil = new EvilTreeThread();
 
-//            treeReader1.start();
+            treeReader1.start();
 //            treeReader2.start();
             evil.start();
-//            treeReader1.join();
+            treeReader1.join();
 //            treeReader2.join();
             evil.join();
 
-//            System.out.println("treeReader1:\n"+treeReader1.getResult());
+            System.out.println("treeReader1:\n"+treeReader1.getResult());
+//            System.out.println("\n\n\n\n");
 //            System.out.println("treeReader2:\n"+treeReader2.getResult());
 //            TreeNode.printValues();
         } catch (InterruptedException e) {

@@ -42,7 +42,7 @@ public class q1 {
                 t2.join();
             }
             else {
-                ThreadPainter t1 = new ThreadPainter(img, r, c, Color.black, "Thread 1");
+                ThreadPainter t1 = new ThreadPainter(img, r, c, "Thread 1");
                 t1.start();
                 t1.join();
             }

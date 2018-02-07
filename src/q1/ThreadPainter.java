@@ -10,7 +10,7 @@ class ThreadPainter extends Thread {
     private final BufferedImage img;
     private final int maxRadius;
     private final int numCircles;
-    private Color color;
+//    private Color color;
     private final String name;
     private static final double PI = 3.1415926535;
     private static final int width = 1920;
@@ -20,14 +20,14 @@ class ThreadPainter extends Thread {
     private static final Object pixelLock = new Object();
 
     // for debug purposes
-    ThreadPainter(BufferedImage img, int maxRadius, int numCircles, Color color, String name) {
-        System.out.println("ThreadPainter " + name + " created.");
-        this.img = img;
-        this.maxRadius = maxRadius;
-        this.numCircles = numCircles;
-        this.color = color;
-        this.name = name;
-    }
+//    ThreadPainter(BufferedImage img, int maxRadius, int numCircles, Color color, String name) {
+//        System.out.println("ThreadPainter " + name + " created.");
+//        this.img = img;
+//        this.maxRadius = maxRadius;
+//        this.numCircles = numCircles;
+//        this.color = color;
+//        this.name = name;
+//    }
 
     // basic constructor
     ThreadPainter(BufferedImage img, int maxRadius, int numCircles, String name) {
@@ -172,7 +172,7 @@ class ThreadPainter extends Thread {
                 }
             }
             catch(InterruptedException e) {
-                System.out.println("Thread color " + color + " interrupted.");
+                System.out.println(name + " interrupted.");
             }
 
 
